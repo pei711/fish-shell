@@ -2610,12 +2610,14 @@ impl<'a> Reader<'a> {
         // Start out as initially dirty.
         self.force_exec_prompt_and_repaint = true;
 
-        self.query(RecurrentQuery {
-            cursor_position: Some(CursorPositionQuery::new(
-                CursorPositionQueryReason::NewPrompt,
-            )),
-            background_color: Some(BackgroundColorQuery::default()),
-        });
+        if !self.exit_loop_requested {
+            self.query(RecurrentQuery {
+                cursor_position: Some(CursorPositionQuery::new(
+                    CursorPositionQueryReason::NewPrompt,
+                )),
+                background_color: Some(BackgroundColorQuery::default()),
+            });
+        }
 
         while !check_exit_loop_maybe_warning(Some(self)) {
             // Enable tty protocols while we read input.
